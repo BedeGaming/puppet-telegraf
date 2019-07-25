@@ -1,35 +1,65 @@
-class profile::telegraf (
-){
-  contain '::telegraf'
+# == Class: telegraf::params
+#
+# A set of default parameters for Telegraf's configuration.
+#
+class telegraf::params {
 
-  $inputs = hiera_hash('profile::telegraf::inputs',{})
-  create_resources(telegraf::input, $inputs)
+  if $::osfamily == 'windows' {
+    $config_file          = 'C:/Program Files/telegraf/telegraf.conf'
+    $config_file_owner    = 'Administrator'
+    $config_file_group    = 'Administrators'
+    $config_folder        = 'C:/Program Files/telegraf/telegraf.d'
+    $logfile              = 'C:/Program Files/telegraf/telegraf.log'
+    $manage_repo          = false
+    $service_enable       = true
+    $service_ensure       = running
+    $service_hasstatus    = false
+    $service_restart      = undef
+  } else {
+    $config_file          = '/etc/telegraf/telegraf.conf'
+    $config_file_owner    = 'telegraf'
+    $config_file_group    = 'telegraf'
+    $config_folder        = '/etc/telegraf/telegraf.d'
+    $logfile              = ''
+    $manage_repo          = true
+    $service_enable       = true
+    $service_ensure       = running
+    $service_hasstatus    = true
+    $service_restart      = 'pkill -HUP telegraf'
+  }
+  $package_name           = 'telegraf'
+  $ensure                 = 'present'
+  $install_options        = []
+  $hostname               = $::hostname
+  $omit_hostname          = false
+  $interval               = '10s'
+  $round_interval         = true
+  $metric_batch_size      = '1000'
+  $metric_buffer_limit    = '10000'
+  $collection_jitter      = '0s'
+  $flush_interval         = '10s'
+  $flush_jitter           = '0s'
+  $debug                  = false
+  $quiet                  = false
+  $global_tags            = {}
+  $manage_service         = true
+  $purge_config_fragments = false
+  $repo_type              = 'stable'
+  $windows_package_url    = 'https://chocolatey.org/api/v2/'
 
-  $redis_inputs = hiera('profile::telegraf::redis::inputs',{})
-  $redis_inputs_defaults = hiera('profile::telegraf::redis::inputs::defaults',{})
-  create_resources(telegraf::input, $redis_inputs,$redis_inputs_defaults)
-
-  $outputs = hiera_hash('profile::telegraf::outputs',{})
-  create_resources(telegraf::output, $outputs)
-
-  $consul_services = hiera_hash('profile::telegraf::consul_services', {})
-  $consul_checks = hiera_hash('profile::telegraf::consul_checks', {})
-
-  case $::kernel {
-    'Linux':   {
-      create_resources('::consul::service', $consul_services)
-      create_resources('::consul::check', $consul_checks)
-      user { "telegraf":
-        groups => ["puppet","root"],
-        notify => Class['telegraf::service'],
-      }
+  $outputs = {
+    'influxdb'  => {
+      'urls'     => [ 'http://localhost:8086' ],
+      'database' => 'telegraf',
+      'username' => 'telegraf',
+      'password' => 'metricsmetricsmetrics',
     }
-    'windows': {
-      create_resources('::winconsul::service', $consul_services)
-      create_resources('::winconsul::check', $consul_checks)
-    }
-    default:   { fail("Unknown kernel ${::kernel}") }
   }
 
-
+  $inputs = {
+    'cpu'  => {
+      'percpu'   => true,
+      'totalcpu' => true,
+    }
+  }
 }
