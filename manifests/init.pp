@@ -19,10 +19,10 @@
 #
 # [*logfile_rotation_interval*]
 #   String. The time interval for which the logfile will be rotated
-#   0 specifies no rotation
+#   0d specifies no time based rotation
 # [*$logfile_rotation_max_size*]
 #   String. The size at which point the log file will be rotated
-#   0 specifies no file size rotation
+#   0MB specifies no file size rotation
 # [*logfile_rotation_max_archives*]
 #   Interger. The minimum amount of log file archives to retain
 #   -1 specifies no archives for removal
