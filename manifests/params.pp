@@ -10,9 +10,9 @@ class telegraf::params {
     $config_file_group             = 'Administrators'
     $config_folder                 = 'C:/Program Files/telegraf/telegraf.d'
     $logfile                       = 'C:/Program Files/telegraf/telegraf.log'
-    $logfile_rotation_interval     = "0d"
-    $logfile_rotation_max_size     = "0MB"
-    $logfile_rotation_max_archives = "-1"
+    $logfile_rotation_interval     = '0d'
+    $logfile_rotation_max_size     = '0MB'
+    $logfile_rotation_max_archives = '-1'
     $manage_repo                   = false
     $service_enable                = true
     $service_ensure                = running

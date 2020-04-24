@@ -131,7 +131,7 @@ class telegraf (
   validate_string($logfile)
   validate_string($logfile_rotation_interval)
   validate_string($logfile_rotation_max_size)
-  validate_string($logfile_rotation_max_archives)
+  validate_integer($logfile_rotation_max_archives)
   validate_string($config_file_owner)
   validate_string($config_file_group)
   validate_absolute_path($config_folder)
