@@ -17,6 +17,15 @@
 # [*logfile*]
 #   String. Path to the log file.
 #
+# [*logfile_rotation_interval*]
+#   String. The time interval for which the logfile will be rotated
+#   0d specifies no time based rotation
+# [*$logfile_rotation_max_size*]
+#   String. The size at which point the log file will be rotated
+#   0MB specifies no file size rotation
+# [*logfile_rotation_max_archives*]
+#   Interger. The minimum amount of log file archives to retain
+#   -1 specifies no archives for removal
 # [*config_file_owner*]
 #   String. User to own the telegraf config file.
 #
@@ -87,36 +96,39 @@
 #   String.  URL for windows telegraf chocolatey repo
 #
 class telegraf (
-  $package_name           = $telegraf::params::package_name,
-  $ensure                 = $telegraf::params::ensure,
-  $config_file            = $telegraf::params::config_file,
-  $config_file_owner      = $telegraf::params::config_file_owner,
-  $config_file_group      = $telegraf::params::config_file_group,
-  $config_folder          = $telegraf::params::config_folder,
-  $hostname               = $telegraf::params::hostname,
-  $omit_hostname          = $telegraf::params::omit_hostname,
-  $interval               = $telegraf::params::interval,
-  $round_interval         = $telegraf::params::round_interval,
-  $metric_batch_size      = $telegraf::params::metric_batch_size,
-  $metric_buffer_limit    = $telegraf::params::metric_buffer_limit,
-  $collection_jitter      = $telegraf::params::collection_jitter,
-  $flush_interval         = $telegraf::params::flush_interval,
-  $flush_jitter           = $telegraf::params::flush_jitter,
-  $logfile                = $telegraf::params::logfile,
-  $debug                  = $telegraf::params::debug,
-  $quiet                  = $telegraf::params::quiet,
-  $inputs                 = $telegraf::params::inputs,
-  $outputs                = $telegraf::params::outputs,
-  $global_tags            = $telegraf::params::global_tags,
-  $manage_service         = $telegraf::params::manage_service,
-  $manage_repo            = $telegraf::params::manage_repo,
-  $purge_config_fragments = $telegraf::params::purge_config_fragments,
-  $repo_type              = $telegraf::params::repo_type,
-  $windows_package_url    = $telegraf::params::windows_package_url,
-  $service_enable         = $telegraf::params::service_enable,
-  $service_ensure         = $telegraf::params::service_ensure,
-  $service_restart        = $telegraf::params::service_restart,
-  $install_options        = $telegraf::params::install_options,
+  $package_name                  = $telegraf::params::package_name,
+  $ensure                        = $telegraf::params::ensure,
+  $config_file                   = $telegraf::params::config_file,
+  $config_file_owner             = $telegraf::params::config_file_owner,
+  $config_file_group             = $telegraf::params::config_file_group,
+  $config_folder                 = $telegraf::params::config_folder,
+  $hostname                      = $telegraf::params::hostname,
+  $omit_hostname                 = $telegraf::params::omit_hostname,
+  $interval                      = $telegraf::params::interval,
+  $round_interval                = $telegraf::params::round_interval,
+  $metric_batch_size             = $telegraf::params::metric_batch_size,
+  $metric_buffer_limit           = $telegraf::params::metric_buffer_limit,
+  $collection_jitter             = $telegraf::params::collection_jitter,
+  $flush_interval                = $telegraf::params::flush_interval,
+  $flush_jitter                  = $telegraf::params::flush_jitter,
+  $logfile                       = $telegraf::params::logfile,
+  $logfile_rotation_interval     = $telegraf::params::logfile_rotation_interval,
+  $logfile_rotation_max_size     = $telegraf::params::logfile_rotation_max_size,
+  $logfile_rotation_max_archives = $telegraf::params::logfile_rotation_max_archives,
+  $debug                         = $telegraf::params::debug,
+  $quiet                         = $telegraf::params::quiet,
+  $inputs                        = $telegraf::params::inputs,
+  $outputs                       = $telegraf::params::outputs,
+  $global_tags                   = $telegraf::params::global_tags,
+  $manage_service                = $telegraf::params::manage_service,
+  $manage_repo                   = $telegraf::params::manage_repo,
+  $purge_config_fragments        = $telegraf::params::purge_config_fragments,
+  $repo_type                     = $telegraf::params::repo_type,
+  $windows_package_url           = $telegraf::params::windows_package_url,
+  $service_enable                = $telegraf::params::service_enable,
+  $service_ensure                = $telegraf::params::service_ensure,
+  $service_restart               = $telegraf::params::service_restart,
+  $install_options               = $telegraf::params::install_options,
 ) inherits ::telegraf::params
 {
 
@@ -126,6 +138,9 @@ class telegraf (
   validate_string($ensure)
   validate_string($config_file)
   validate_string($logfile)
+  validate_string($logfile_rotation_interval)
+  validate_string($logfile_rotation_max_size)
+  validate_integer($logfile_rotation_max_archives)
   validate_string($config_file_owner)
   validate_string($config_file_group)
   validate_absolute_path($config_folder)
